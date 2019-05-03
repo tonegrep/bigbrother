@@ -25,7 +25,7 @@ SECRET_KEY = '8_#ae5w^1f(pia(e^-pdv(i1hr9(x%v%i^9j3$+bei5s^*8%4w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['tohue.pythonanywhere.com']
 
 
 # Application definition
