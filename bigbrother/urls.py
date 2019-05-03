@@ -20,5 +20,4 @@ from devices import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='home'),
-    path('django_assistant/', include('django_assistant.urls')),
 ]

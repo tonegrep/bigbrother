@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #3d party
-    'django_assistant',
 
     #core
     'devices',
