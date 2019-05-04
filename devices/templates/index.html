@@ -5,10 +5,12 @@
   {% block title %}<title>Big Brother</title>{% endblock %}
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <style>
+    @media (min-width: 768px) {
     .navbar-nav.navbar-center {
-      position: absolute;
-      left: 50%;
-      transform: translatex(-50%);
+      position: relative;
+      left: 45%;
+      transform: translatex(-45%);
+    }
     }
     .no-padding {
       padding: 0 !important;
@@ -24,7 +26,6 @@
       float: left;
       padding: 12px;
       color: white;
-      font-size: 17px;
       text-align: center;
     }
     .btn-outline-primary, .btn-outline-primary:active {
@@ -33,12 +34,17 @@
       color: black !important;
       background-color: #3ACCB3 !important;
     }
+    @media (max-width: 768px) {
+    .navbar-collapse.collapse:not(.show) {
+        display: none !important;
+    }
+    }
   </style>
 
 </head>
 <body>
 <div class="container-fluid no-padding">
-  <header class="blog-header py-4" style="background-color: #D7F0EE">
+  <header class="blog-header py-5" style="background-color: #D7F0EE">
           <div class="row flex-nowrap justify-content-between align-items-center">
             <div class="col-4 text-left pl-5">
               <a class="blog-header-logo text-dark" href="#">tut budet logo</a>
@@ -50,31 +56,31 @@
             </div>
           </div>
   </header>
-  <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background-color: #3ACCB3">
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light py-3" style="background-color: #3ACCB3">
   <a class="navbar-brand" href="#">Big Brother</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav navbar-center">
+    <ul class="navbar-nav navbar-center mr-auto mt-2 mt-lg-0">
       <li class="nav-item">
         <div class="navitem-cont">
-        <a class="nav-link" href="#">Кабинет<span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#"><h4>Кабинет</h4></a>
         </div>
       </li>
       <li class="nav-item">
         <div class="navitem-cont">
-        <a class="nav-link" href="#">Устройства</a>
+        <a class="nav-link" href="#"><h4>Устройства</h4></a>
         </div>
       </li>
       <li class="nav-item">
         <div class="navitem-cont">
-        <a class="nav-link" href="#">Дом</a>
+        <a class="nav-link" href="#"><h4>Дом</h4></a>
         </div>
       </li>
       <li class="nav-item">
         <div class="navitem-cont">
-          <a class="nav-link" href="#">Помощь</a>
+          <a class="nav-link" href="#"><h4>Помощь</h4></a>
         </div>
       </li>
     </ul>
