@@ -1,0 +1,33 @@
+@media (min-width: 768px) {
+    .navbar-nav.navbar-center {
+      position: relative;
+      left: 45%;
+      transform: translatex(-45%);
+    }
+}
+.no-padding {
+  padding: 0 !important;
+}
+.no-margin {
+  margin-top: 0 !important;
+}
+.navitem-cont :hover {
+  background-color: #C9EBE8 !important;
+}
+.navitem-cont {
+  float: left;
+  padding: 12px;
+  color: white;
+  text-align: center;
+}
+.btn-outline-primary, .btn-outline-primary:active {
+  width: 33%;
+  border-color: #1DBAA0 !important;
+  color: black !important;
+  background-color: #3ACCB3 !important;
+}
+@media (max-width: 768px) {
+.navbar-collapse.collapse:not(.show) {
+    display: none !important;
+}
+}

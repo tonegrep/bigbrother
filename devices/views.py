@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views.generic import TemplateView
 from devices.models import *
 
-class IndexView(TemplateView):
+class DeviceView(TemplateView):
     template_name = 'devices.html'
     def get(self, request, *args, **kwargs):
         light_items = LightController.objects.all()
