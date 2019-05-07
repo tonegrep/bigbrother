@@ -20,11 +20,16 @@ class System(models.Model):
     def get_users(self):
         return users
 
+class Room(models.Model):
+    name = models.CharField("Room Name", max_length=100)
+    system = models.ForeignKey(System, on_delete=models.CASCADE)
+
 class Controller(models.Model):
     name = models.CharField("Unknown Controller", max_length=50)
     system = models.ForeignKey(System, on_delete=models.CASCADE)
     STATUS = Choices('offline', 'ready', 'busy')
     status = StatusField()
+    room = models.ForeignKey(Room, on_delete=models.DO_NOTHING, default=None)
     class Meta:
         abstract = True
     def get_users(self):

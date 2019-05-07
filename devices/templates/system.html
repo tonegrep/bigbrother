@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}<title>Все устройства</title>{% endblock %}
+{% block content %}
+  <div class="wrapper">
+
+    {% for item in rooms %}
+        <div class="container divider">
+            <h4>{{ item.name }}</h4>
+            <hr/>
+        </div>
+        <div class="container">
+        {% for device in item.lightcontroller_set.all %}
+            {% include 'device_card.html' with item=device %}    
+        {% endfor %}
+        {% for device in item.remotecontroller_set.all %}
+            {% include 'device_card.html' with item=device %}    
+        {% endfor %}
+        {% for device in item.sensor_set.all %}
+            {% include 'device_card.html' with item=device %}    
+        {% endfor %}
+        </div>
+    {% endfor %}
+    </div>
+{% endblock content %}
+

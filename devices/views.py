@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
-from devices.models import LightController, RemoteController, Sensor, System
+from devices.models import LightController, RemoteController, Sensor, System, Room
 
 class DeviceView(TemplateView):
     template_name = 'devices.html'
@@ -16,4 +16,12 @@ class DeviceView(TemplateView):
         }
         return render(request, 'devices.html', context)
 
+class SystemView(TemplateView):
+    template_name = 'system.html'
+    def get(self, request, *args, **kwargs):
+        rooms = Room.objects.filter(system__users=request.user)
+        context = {
+            'rooms' : rooms,
+        }
+        return render(request, 'system.html', context)
 # Create your views here.
