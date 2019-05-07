@@ -14,14 +14,20 @@
               <a class="blog-header-logo text-dark" href="#">tut budet logo</a>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center pr-5">
-              <a class="btn btn-sm py-3 px-3" href="#">Войти</a>
+              {% if user.is_authenticated %}
+              <a class="btn btn-sm py-3 px-3" href="{% url 'logout' %}?next={% url 'home' %}">Выйти</a>
+              
+              {% else %}
+              <a class="btn btn-sm py-3 px-3" href="/accounts/login">Войти</a>
+              {% endif %}
               <a class="btn btn-sm py-3 px-3" href="/">Главная</a>
               <a class="btn btn-sm py-3 px-3" href="#">Контакты</a>
             </div>
           </div>
   </header>
+  {% if user.is_authenticated %}
   <nav class="navbar sticky-top navbar-expand-lg navbar-light mb-4" style="background-color: #3ACCB3">
-  <a class="navbar-brand" href="/">Big Brother</a>
+  <a class="navbar-brand" href="/">{{ user.username }}</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -50,6 +56,8 @@
     </ul>
   </div>
 </nav>
+{% endif %}
+
 {% block content %}
 {% endblock %}
 

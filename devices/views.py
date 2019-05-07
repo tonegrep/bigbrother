@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
-from devices.models import *
+from devices.models import LightController, RemoteController, Sensor
 
 class DeviceView(TemplateView):
     template_name = 'devices.html'

@@ -20,6 +20,7 @@ from .views import HomeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('devices/', DeviceView.as_view(), name='devices'),
     path('', HomeView.as_view(), name='home'),
 ]

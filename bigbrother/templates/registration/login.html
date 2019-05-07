@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  {% block title %}<title>Big Brother</title>{% endblock %}
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{% static "default.css" %}">
+</head>
+<body>
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+<div class="container p-5">
+        <div class="card card-signin">
+          <div class="card-header">
+            Вход
+            <button type="button" class="close" data-dismiss="card" aria-label="Close" href="/">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Введите свои данные</h5>
+            <form class="form-signin" method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="login" id="id_username" name="username" class="form-control mb-2" placeholder="Логин" required autofocus>
+                <input type="password" id="id_password" name="password" class="form-control mb-2" placeholder="Пароль" required>
+                <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                    <label class="custom-control-label" for="customCheck1">Запомнить пароль</label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" value="login">Войти</button>
+                <hr class="my-4">
+            </form>
+          </div>
+        </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>
