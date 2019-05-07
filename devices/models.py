@@ -16,6 +16,9 @@ class System(models.Model):
     name = models.CharField("Smart house", max_length=50)
     address = models.CharField(max_length=50)
     users = models.ManyToManyField(User)
+    @property
+    def get_users(self):
+        return users
 
 class Controller(models.Model):
     name = models.CharField("Unknown Controller", max_length=50)
@@ -24,6 +27,8 @@ class Controller(models.Model):
     status = StatusField()
     class Meta:
         abstract = True
+    def get_users(self):
+        return system.get_users()
 
 class LightController(Controller):
     TYPE_CHOICE = Choices('RGB', 'Singlecolor')
