@@ -1,0 +1,41 @@
+<div class="container p-3">
+        <div class="card">
+          <div class="card-header">
+            {{ item.name }}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">⏺<b>{{ item.status }}</b></h5>
+            <p class="card-text">Тип: {{ item.type }}</p>
+            <p class="card-text">Текущий уровень яркости: {{ item.brightness }}</p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseParams{{item.id}}" aria-expanded="false" aria-controls="collapseParams{{item.id}}">
+                Управлять
+            </button>
+          </div>
+<div class="collapse" id="collapseParams{{item.id}}">
+    {% if item.type == 'Singlecolor' %}
+        <form action="light_brightness" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <div class="container row mb-5">
+        <p class="card-text col-2">Уровень яркости: </p>
+        <div class="container slidecontainer col-5">
+          <input type="range" min="0" max="255" value="128" class="slider" id="brightness_range" name="brightness">
+        </div>
+        <input type="hidden" name="controller" value="{{item.id}}">
+        <button class="btn btn-primary" type="button submit" value="light_brightness">
+          Применить
+          {% comment %} insert link to post method for job creation {% endcomment %}
+        </button>          
+        </form>
+      </div>
+    {% else %}
+      {{ item.type }}
+    {% endif %}
+      <div class="container">
+        <button class="btn btn-primary" type="button">
+            Выключить
+        </button>
+      </div>
+  </div>
+</div>
+</div>

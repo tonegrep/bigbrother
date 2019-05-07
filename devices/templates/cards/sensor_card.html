@@ -1,0 +1,21 @@
+<div class="container p-3">
+        <div class="card">
+          <div class="card-header">
+            {{ item.name }}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">⏺<b>{{ item.status }}</b></h5>
+            <p class="card-text">Текущий показатель: {{ item.current_data }} {{ item.unit_of_measure }}</p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseParams{{item.id}}" aria-expanded="false" aria-controls="collapseParams{{item.id}}">
+                Управлять
+            </button>
+          </div>
+        </div>
+</div>
+<div class="collapse" id="collapseParams{{item.id}}">
+  <div class="card card-body">
+    <button class="btn btn-primary col-2" type="button">
+        Выключить
+    </button>
+  </div>
+</div>

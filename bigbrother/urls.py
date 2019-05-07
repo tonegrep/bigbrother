@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from devices.views import DeviceView, SystemView, ProfileView
+from devices.views import DeviceView, SystemView, ProfileView, LightControllerView
 from .views import HomeView, SignUpView
 
 urlpatterns = [
@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', SignUpView.as_view(), name='signup'),
     path('devices/', DeviceView.as_view(), name='devices'),
+    path('devices/light_brightness', LightControllerView.as_view(), name='light_brightness'),
     path('system/', SystemView.as_view(), name='system'),
     path('profile/', ProfileView.as_view(), name='profile'),
 ]

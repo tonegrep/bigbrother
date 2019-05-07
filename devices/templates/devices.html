@@ -9,7 +9,7 @@
     <div class="container">
     {% if light_items %}
       {% for item in light_items %}
-        {% include 'device_card.html' with item=item %}    
+        {% include 'cards/light_card.html' with item=item %}    
       {% endfor %}
     {% else %}
     <h6>У вас нет осветительных устройств!</h6>
@@ -22,7 +22,7 @@
     <div class="container">
     {% if sensor_items %}
     {% for item in sensor_items %}
-      {% include 'device_card.html' with item=item %}    
+      {% include 'cards/sensor_card.html' with item=item %}    
     {% endfor %}
     {% else %}
     <h6>У вас нет датчиков!</h6>
@@ -36,7 +36,7 @@
     <div class="container">
     {% if rc_items %}
       {% for item in rc_items %}
-        {% include 'device_card.html' with item=item %}    
+        {% include 'cards/rc_card.html' with item=item %}    
       {% endfor %}
     {% else %}
     <h6>У вас нет устройств дистанционного управления!</h6>

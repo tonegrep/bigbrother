@@ -48,6 +48,7 @@ class RemoteController(Controller):
     controlled_device = models.ManyToManyField(ControlledDevice)    
 
 class Sensor(Controller):
+    current_data = models.IntegerField(default=0)
     MEASURE_CHOICE = Choices('C', '%')
     unit_of_measure = models.CharField(
         max_length=2,
