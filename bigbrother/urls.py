@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from devices.views import DeviceView, SystemView
+from devices.views import DeviceView, SystemView, ProfileView
 from .views import HomeView, SignUpView
 
 urlpatterns = [
@@ -25,4 +25,5 @@ urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
     path('devices/', DeviceView.as_view(), name='devices'),
     path('system/', SystemView.as_view(), name='system'),
+    path('profile/', ProfileView.as_view(), name='profile'),
 ]

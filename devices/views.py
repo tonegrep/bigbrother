@@ -16,6 +16,11 @@ class DeviceView(TemplateView):
         }
         return render(request, 'devices.html', context)
 
+class ProfileView(TemplateView):
+    template_name='profile.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, 'profile.html')
+
 class SystemView(TemplateView):
     template_name = 'system.html'
     def get(self, request, *args, **kwargs):
