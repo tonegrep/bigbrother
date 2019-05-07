@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+{% if form.errors %}
+<p>Что-то не так, попробуйте еще раз.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>У вашего аккаунта нет доступа к этой странице. Чтобы продолжить,
+    залогиньтесь в роли пользователя с соответствующими полномочиями.</p>
+    {% else %}
+    <p>Залогиньтесь,чтобы продолжить.</p>
+    {% endif %}
+{% endif %}
+<div class="container p-5">
+        <div class="card card-signin">
+          <div class="card-header">
+            Регистрация
+            <button type="button" class="close" data-dismiss="card" aria-label="Close" href="/">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Введите свои данные</h5>
+            <form class="form-signin" method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <div class="container row mb-2">
+                    <input type="login" id="id_username" name="username" class="form-control col-5" placeholder="Логин" required autofocus>
+                    <label class="helptext col-5">Обязательное поле. До 150 символов. Только буквы, цифры и @/./+/-/_.</label>
+                </div>
+                <input type="password" id="id_password1" name="password1" class="form-control mb-2" placeholder="Пароль" required>
+                <ul>
+                    <li>Ваш пароль не должен совпадать с логином.</li>
+                    <li>Ваш пароль должен содержать более 8 символов.</li>
+                    <li>Ваш пароль не должен быть часто используемым.</li>
+                    <li>Ваш пароль не должен состоять из одних цифр.</li></ul>
+                <div class="container row mb-2">
+                    <input type="password" id="id_password2" name="password2" class="form-control col-5" placeholder="Пароль" required>
+                    <label class="helptext col-5">Введите пароль второй раз для проверки.</label>
+                </div>
+                <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                    <label class="custom-control-label" for="customCheck1">Запомнить пароль</label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" value="signup">Зарегистрироваться</button>
+                <hr class="my-4">
+            </form>
+          </div>
+        </div>
+</div>
+{% endblock content %}
