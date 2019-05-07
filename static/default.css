@@ -14,7 +14,7 @@
 .navitem-cont :hover {
   background-color: #C9EBE8 !important;
 }
-.navitem-cont {
+.nav-item {
   float: left;
   padding: 12px;
   color: white;
