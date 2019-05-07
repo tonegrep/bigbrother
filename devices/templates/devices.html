@@ -7,27 +7,41 @@
       <hr/>
     </div>
     <div class="container">
-    {% for item in light_items %}
-      {% include 'device_card.html' with item=item %}    
-    {% endfor %}
+    {% if light_items %}
+      {% for item in light_items %}
+        {% include 'device_card.html' with item=item %}    
+      {% endfor %}
+    {% else %}
+    <h6>У вас нет осветительных устройств!</h6>
+    {% endif %}
     </div>
     <div class="container divider">
       <h4>Датчики</h4>
       <hr/>
     </div>
     <div class="container">
+    {% if sensor_items %}
     {% for item in sensor_items %}
       {% include 'device_card.html' with item=item %}    
     {% endfor %}
+    {% else %}
+    <h6>У вас нет датчиков!</h6>
+    {% endif %}
+
     </div>
     <div class="container divider">
       <h4>Дистанционное управление устройствами</h4>
       <hr/>
     </div>
     <div class="container">
-    {% for item in rc_items %}
-      {% include 'device_card.html' with item=item %}    
-    {% endfor %}
+    {% if rc_items %}
+      {% for item in rc_items %}
+        {% include 'device_card.html' with item=item %}    
+      {% endfor %}
+    {% else %}
+    <h6>У вас нет устройств дистанционного управления!</h6>
+    {% endif %}
+
     </div>
   </div>
 {% endblock content %}

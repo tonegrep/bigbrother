@@ -3,7 +3,8 @@
 {% block content %}
   <div class="wrapper">
 
-    {% for item in rooms %}
+    {% if rooms %}
+        {% for item in rooms %}
         <div class="container divider">
             <h4>{{ item.name }}</h4>
             <hr/>
@@ -19,7 +20,11 @@
             {% include 'device_card.html' with item=device %}    
         {% endfor %}
         </div>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <h1>В вашей системе нет ни одной комнаты!</h1>
+    {% endif %}
+
     </div>
 {% endblock content %}
 
