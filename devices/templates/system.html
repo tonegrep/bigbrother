@@ -11,13 +11,13 @@
         </div>
         <div class="container">
         {% for device in item.lightcontroller_set.all %}
-            {% include 'device_card.html' with item=device %}    
+            {% include 'cards/light_card.html' with item=device %}    
         {% endfor %}
         {% for device in item.remotecontroller_set.all %}
-            {% include 'device_card.html' with item=device %}    
+            {% include 'cards/rc_card.html' with item=device %}    
         {% endfor %}
         {% for device in item.sensor_set.all %}
-            {% include 'device_card.html' with item=device %}    
+            {% include 'cards/sensor_card.html' with item=device %}    
         {% endfor %}
         </div>
         {% endfor %}
