@@ -16,5 +16,6 @@ sudo apt-get install mysql-server mysql-client
 python manage.py makemigrations
 python manage.py migrate
 ```
+4. If needed, load the data fixture with `python manage.py loaddata fixtures/initial_data.json` 
 
-4. Run project on localhost using `python manage.py runserver`
+5. Run project on localhost using `python manage.py runserver`
