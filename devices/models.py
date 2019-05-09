@@ -14,6 +14,7 @@ class RemoteControlCode(models.Model):
 
 class System(models.Model):
     name = models.CharField("Smart house", max_length=50)
+    ip = models.GenericIPAddressField(default=None)
     address = models.CharField(max_length=50)
     users = models.ManyToManyField(User)
     @property

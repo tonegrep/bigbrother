@@ -4,13 +4,27 @@ from django.views.generic import TemplateView, UpdateView
 from devices.models import LightController, RemoteController, Sensor, System, Room
 from .forms import LightControllerBrightnessForm
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        print("returning FORWARDED_FOR")
+        ip = x_forwarded_for.split(',')[-1].strip()
+    elif request.META.get('HTTP_X_REAL_IP'):
+        print("returning REAL_IP")
+        ip = request.META.get('HTTP_X_REAL_IP')
+    else:
+        print("returning REMOTE_ADDR")
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 class LightControllerView(UpdateView):
     def post(self, request, *args, **kwargs):
-        #request.get_host() to check if this is server(=server host) or device(= device)
         form = LightControllerBrightnessForm(request.POST)
-        if form.is_valid():
-            controller = LightController.objects.get(id=form.data['controller'])
-            controller.brightness = form.data['brightness']
+        print(get_client_ip(request))
+        if form.is_valid() or request.POST.get('user_type') == 'controller':
+            controller = LightController.objects.get(id=request.POST.get('controller'))
+            #ip = controller.system
+            controller.brightness = request.POST.get('brightness')
             controller.save()
         return redirect('/devices')
 
