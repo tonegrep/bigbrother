@@ -15,19 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from devices.views import DeviceView, SystemView, ProfileView, LightControllerBrightnessView
 from .views import HomeView, SignUpView, get_csrf
+from devices.views import ProfileView, SystemView
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.authtoken import views as drf_views
+import api.urls
 
 urlpatterns = [
-    path('api-token-auth/', drf_views.obtain_auth_token),
+    path('api/', include('api.urls')),
     path('', HomeView.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', csrf_exempt(SignUpView.as_view()), name='signup'),
-    path('devices/', DeviceView.as_view(), name='devices'),
-    path('devices/light_brightness', LightControllerBrightnessView.as_view(), name='light_brightness'),
+    path('devices/', include('devices.urls')),
     path('system/', SystemView.as_view(), name='system'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('csrf/', get_csrf, name='csrf'),
