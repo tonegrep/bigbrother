@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views.generic import TemplateView, UpdateView
 from devices.models import LightController, RemoteController, Sensor, System, Room
 from .forms import LightControllerBrightnessForm
+import requests
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -17,21 +18,36 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-class LightControllerView(UpdateView):
+# def light_status(request):
+#     if request.method == 'POST':
+#         controller = LightController.objects.get(uuid=request.GET.get('uuid'))
+#         if controller:
+            
+
+
+class LightControllerBrightnessView(UpdateView):
     def post(self, request, *args, **kwargs):
         form = LightControllerBrightnessForm(request.POST)
-        print(get_client_ip(request))
-        if form.is_valid() or request.POST.get('user_type') == 'controller':
+        if form.is_valid() and request.user.is_authenticated:
             controller = LightController.objects.get(id=request.POST.get('controller'))
-            #ip = controller.system
+            ip = controller.system.ip
             controller.brightness = request.POST.get('brightness')
             controller.save()
+            controller_response = requests.post('http://' + ip + ':' + str(controller.port) + '/SET',data='brightness=' + request.POST.get('brightness'))
+            print(controller_response)
+        # elif request.POST.get('user_type') == 'controller':
+        #     controller = LightController.objects.get(uuid=request.GET.get('uuid'))
+        #     if controller:
         return redirect('/devices')
 
 class DeviceView(TemplateView):
     template_name = 'devices.html'
     def get(self, request, *args, **kwargs):
         light_items = LightController.objects.filter(system__users=request.user)
+        for item in light_items:
+            if item.id is 2: #change this to if item is available
+                controller_response = requests.get('http://' + item.system.ip + ':' + str(item.port) + '/GET')
+                item.brightness = int(controller_response.content)
         rc_items = RemoteController.objects.filter(system__users=request.user)
         sensor_items = Sensor.objects.filter(system__users=request.user)
         context = {

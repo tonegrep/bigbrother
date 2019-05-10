@@ -27,6 +27,8 @@ class Room(models.Model):
 
 class Controller(models.Model):
     name = models.CharField("Unknown Controller", max_length=50)
+    uuid = models.CharField("Unique key of controller", max_length=20, default="X")
+    port = models.IntegerField(default=300)
     system = models.ForeignKey(System, on_delete=models.CASCADE)
     STATUS = Choices('offline', 'ready', 'busy')
     status = StatusField()
@@ -58,7 +60,7 @@ class Sensor(Controller):
     )
 
 class Job(models.Model):
-    commands = models.CharField(max_length=200)
+    command = models.CharField(max_length=200)
     req_date_time = models.DateTimeField(auto_now_add=True)
     RECCURENCE_CHOICE = Choices('Everyday', 'Once')
     reccurence_type = models.CharField(
