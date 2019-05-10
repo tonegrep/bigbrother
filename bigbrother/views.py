@@ -3,6 +3,14 @@ from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
+from django.template.context_processors import csrf
+
+def get_csrf(request):
+    response = None
+    if request.method == 'GET':
+        csrf_tok = csrf(request)
+        csrf_token =  str(csrf_tok.get('csrf_token'))
+    return HttpResponse(response)
 
 class SignUpView(TemplateView):
     def post(self, request):
