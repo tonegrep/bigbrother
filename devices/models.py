@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from model_utils.managers import InheritanceManager
 from model_utils.choices import Choices 
 from model_utils.fields import StatusField
 

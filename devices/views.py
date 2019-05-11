@@ -18,11 +18,13 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+def check_controller_uuid(request):
+    pass
+
 # def light_status(request):
 #     if request.method == 'POST':
 #         controller = LightController.objects.get(uuid=request.GET.get('uuid'))
 #         if controller:
-            
 
 
 class LightControllerBrightnessView(UpdateView):
