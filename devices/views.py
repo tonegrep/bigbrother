@@ -46,10 +46,10 @@ class DeviceView(TemplateView):
     template_name = 'devices.html'
     def get(self, request, *args, **kwargs):
         light_items = LightController.objects.filter(system__users=request.user)
-        for item in light_items:
-            if item.id is 2: #change this to if item is available
-                controller_response = requests.get('http://' + item.system.ip + ':' + str(item.port) + '/GET')
-                item.brightness = int(controller_response.content)
+        # for item in light_items:
+        #     if item.id is 2: #change this to if item is available
+        #         controller_response = requests.get('http://' + item.system.ip + ':' + str(item.port) + '/GET')
+        #         item.brightness = int(controller_response.content)
         rc_items = RemoteController.objects.filter(system__users=request.user)
         sensor_items = Sensor.objects.filter(system__users=request.user)
         context = {

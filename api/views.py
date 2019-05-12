@@ -4,10 +4,61 @@ from rest_framework.views import APIView
 from .serializers import ControlledDeviceSerializer, RemoteControlCodeSerializer, SystemSerializer, RoomSerializer, LightControllerSerializer, RemoteControllerSerializer, SensorSerializer, JobSerializer
 from devices.models import ControlledDevice, RemoteControlCode, System, Room, LightController, RemoteController, Sensor, Job
 from rest_framework.decorators import authentication_classes
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
+import requests
+from oauth2_provider.views.generic import ProtectedResourceView
+from django.http import HttpResponse
+from rest_framework import generics, permissions
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope, OAuth2Authentication
+from django.contrib.auth.models import User, Group
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
-@authentication_classes((TokenAuthentication,))
+import requests
+
+from .serializers import CreateUserSerializer
+
+CLIENT_ID = 'SkLYqHz439ZaHl1DntnKrzuEJHv08sAZeZyjOkVc'
+CLIENT_SECRET = '8uJg9tl9oAV22HFaQcc2649U6kk4HxoNV3BDs4V5UPQs5AoHm2NlmeRJyL43Z3s95VPE5zS6b2SVFhnQ3oYmOENFFKDovbKcPQDgcP97CDX840jiokZxkEk0UJhJMXVR'
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    serializer = CreateUserSerializer(data=request.data) 
+    if serializer.is_valid():
+        serializer.save() 
+        r = requests.post('http://192.168.1.10:8000/api/o/token/', 
+            data={
+                'grant_type': 'password',
+                'username': request.data['username'],
+                'password': request.data['password'],
+                'client_id': CLIENT_ID,
+                'client_secret': CLIENT_SECRET,
+            },
+        )
+        return Response(r)
+    return Response(serializer.errors)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def token(request):
+    r = requests.post(
+    'http://192.168.1.10:8000/api/o/token/', 
+        data={
+            'grant_type': 'password',
+            'username': request.data['username'],
+            'password': request.data['password'],
+            'client_id': CLIENT_ID,
+            'client_secret': CLIENT_SECRET,
+        },
+    )
+    return Response(r)
+
 class ControlledDeviceAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, id, format=None):
         try:
             item = ControlledDevice.objects.get(pk=id)
@@ -16,8 +67,8 @@ class ControlledDeviceAPIView(APIView):
         except ControlledDevice.DoesNotExist:
             return Response(status=404)
 
-@authentication_classes((TokenAuthentication,))
 class ControlledDeviceAPIListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, format=None):
         items = ControlledDevice.objects.all()
         paginator = PageNumberPagination()
@@ -25,8 +76,8 @@ class ControlledDeviceAPIListView(APIView):
         serializer = ControlledDeviceSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-@authentication_classes((TokenAuthentication,))
 class RemoteControlCodeAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, id, format=None):
         try:
             item = RemoteControlCode.objects.get(pk=id)
@@ -35,8 +86,8 @@ class RemoteControlCodeAPIView(APIView):
         except RemoteControlCode.DoesNotExist:
             return Response(status=404)
 
-@authentication_classes((TokenAuthentication,))
 class RemoteControlCodeAPIListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, format=None):
         items = RemoteControlCode.objects.all()
         paginator = PageNumberPagination()
@@ -44,20 +95,20 @@ class RemoteControlCodeAPIListView(APIView):
         serializer = RemoteControlCodeSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-@authentication_classes((TokenAuthentication,))
 class SystemAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, id, format=None):
         try:
             item = System.objects.get(pk=id)
-            if item.users is request.user:
+            if request.user in item.users.all():
                 serializer = SystemSerializer(item)
                 return Response(serializer.data)
             return Response(status=401)
         except System.DoesNotExist:
             return Response(status=404)
 
-@authentication_classes((TokenAuthentication,))
 class SystemAPIListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, format=None):
         items = System.objects.filter(users=request.user)
         paginator = PageNumberPagination()
@@ -65,20 +116,20 @@ class SystemAPIListView(APIView):
         serializer = SystemSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-@authentication_classes((TokenAuthentication,))
 class RoomAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, id, format=None):
         try:
             item = Room.objects.get(pk=id)
-            if item.system.users is request.user:
+            if request.user in item.system.users.all():
                 serializer = RoomSerializer(item)
                 return Response(serializer.data)
             return Response(status=401)
         except Room.DoesNotExist:
             return Response(status=404)
 
-@authentication_classes((TokenAuthentication,))
 class RoomAPIListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, format=None):
         items = Room.objects.filter(system__users=request.user)
         paginator = PageNumberPagination()
@@ -86,20 +137,21 @@ class RoomAPIListView(APIView):
         serializer = RoomSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-@authentication_classes((TokenAuthentication,))
 class LightControllerAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, id, format=None):
         try:
             item = LightController.objects.get(pk=id)
-            if item.system.users is request.user:
+            print(item.system.users, request.user)
+            if request.user in item.system.users.all():
                 serializer = LightControllerSerializer(item)
                 return Response(serializer.data)
             return Response(status=401)
         except LightController.DoesNotExist:
             return Response(status=404)
 
-@authentication_classes((TokenAuthentication,))
 class LightControllerAPIListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, format=None):
         items = LightController.objects.filter(system__users=request.user)
         paginator = PageNumberPagination()
@@ -107,20 +159,37 @@ class LightControllerAPIListView(APIView):
         serializer = LightControllerSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-@authentication_classes((TokenAuthentication,))
+class LightControllerBrightnessAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
+    def post(self, request, format=None):
+        try:
+            item = LightController.objects.get(pk=request.POST.get('controller'))
+            print(item, item.system, item.system.users, request.user)
+            if request.user in item.system.users.all():
+                ip = item.system.ip
+                item.brightness = request.POST.get('brightness')
+                item.save()
+                requests.post('http://' + ip + ':' + str(item.port) + '/SET',data='brightness=' + request.POST.get('brightness'))
+                serializer = LightControllerSerializer(item)
+                return Response(serializer.data)
+            return Response(status=401)
+        except LightController.DoesNotExist:
+            return Response(status=404)
+
 class RemoteControllerAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, id, format=None):
         try:
             item = RemoteController.objects.get(pk=id)
-            if item.system.users is request.user:    
+            if request.user in item.system.users.all():   
                 serializer = RemoteControllerSerializer(item)
                 return Response(serializer.data)
             return Response(status=401)
         except RemoteController.DoesNotExist:
             return Response(status=404)
 
-@authentication_classes((TokenAuthentication,))
 class RemoteControllerAPIListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, format=None):
         items = RemoteController.objects.filter(system__users=request.user)
         paginator = PageNumberPagination()
@@ -128,20 +197,20 @@ class RemoteControllerAPIListView(APIView):
         serializer = RemoteControllerSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-@authentication_classes((TokenAuthentication,))
 class SensorAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, id, format=None):
         try:
             item = Sensor.objects.get(pk=id)
-            if item.system.users is request.user:
+            if request.user in item.system.users.all():
                 serializer = SensorSerializer(item)
                 return Response(serializer.data)
             return Response(status=401)
         except Sensor.DoesNotExist:
             return Response(status=404)
 
-@authentication_classes((TokenAuthentication,))
 class SensorAPIListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, format=None):
         items = Sensor.objects.filter(system__users=request.user)
         paginator = PageNumberPagination()
