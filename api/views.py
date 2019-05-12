@@ -1,25 +1,16 @@
+from django.contrib.auth.models import User, Group
+from django.utils.decorators import method_decorator
+from rest_framework import generics, permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import ControlledDeviceSerializer, RemoteControlCodeSerializer, SystemSerializer, RoomSerializer, LightControllerSerializer, RemoteControllerSerializer, SensorSerializer, JobSerializer
-from devices.models import ControlledDevice, RemoteControlCode, System, Room, LightController, RemoteController, Sensor, Job
-from rest_framework.decorators import authentication_classes
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
-import requests
-from oauth2_provider.views.generic import ProtectedResourceView
-from django.http import HttpResponse
-from rest_framework import generics, permissions
-from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope, OAuth2Authentication
-from django.contrib.auth.models import User, Group
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import authentication_classes, api_view, permission_classes
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import AllowAny
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication
+from .serializers import ControlledDeviceSerializer, RemoteControlCodeSerializer, SystemSerializer, RoomSerializer, LightControllerSerializer, RemoteControllerSerializer, SensorSerializer, JobSerializer, CreateUserSerializer
+from devices.models import ControlledDevice, RemoteControlCode, System, Room, LightController, RemoteController, Sensor, Job
 import requests
-
-from .serializers import CreateUserSerializer
 
 CLIENT_ID = 'SkLYqHz439ZaHl1DntnKrzuEJHv08sAZeZyjOkVc'
 CLIENT_SECRET = '8uJg9tl9oAV22HFaQcc2649U6kk4HxoNV3BDs4V5UPQs5AoHm2NlmeRJyL43Z3s95VPE5zS6b2SVFhnQ3oYmOENFFKDovbKcPQDgcP97CDX840jiokZxkEk0UJhJMXVR'
@@ -39,7 +30,7 @@ def register(request):
                 'client_secret': CLIENT_SECRET,
             },
         )
-        return Response(r)
+        return Response(r.json())
     return Response(serializer.errors)
 
 @api_view(['POST'])
@@ -55,7 +46,7 @@ def token(request):
             'client_secret': CLIENT_SECRET,
         },
     )
-    return Response(r)
+    return Response(r.json())
 
 class ControlledDeviceAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
