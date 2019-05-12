@@ -26,7 +26,8 @@ SECRET_KEY = 'X'
 DEBUG = True
 
 ALLOWED_HOSTS = ['tohue.pythonanywhere.com', 
-    '127.0.0.1'
+    '127.0.0.1',
+    '192.168.1.10'
 ]
 
 
@@ -39,11 +40,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken',
 
     #3d party
+    'django_extensions',
+    'django_celery_results',
+    'drf_generators',
+    'oauth2_provider',
 
     #core
     'devices',
+    'api',
+    'hardware',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +62,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    #3d party
 ]
 
 ROOT_URLCONF = 'bigbrother.urls'
@@ -116,6 +126,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True
 
 USE_I18N = True
 
@@ -134,3 +146,27 @@ STATICFILES_DIRS = (
 )
 
 LOGIN_REDIRECT_URL = '/'
+
+FIXTURES_DIRS = (
+    os.path.join(BASE_DIR, "fixtures"),
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 15,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+
+# BROKER_URL = 'django://'
