@@ -4,6 +4,6 @@ from .tasks import process_light
 
 def data_transmit(request):
     if request.method == 'POST':
-        process_light.delay(request.body.decode('utf-8'))
+        process_light.delay(request)
 
 # Create your views here.
