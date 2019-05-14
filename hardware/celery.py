@@ -1,7 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Celery
 import os
-import json
 
 from celery.utils.log import get_task_logger
 logger = get_task_logger(__name__)
@@ -15,15 +14,6 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
 
-@app.task
-def test(arg):
-    logger.info(arg)
-    print(arg)
-    return arg
-
-@app.task
-def process_data(controller_id, data):
-    
 
 # @app.on_after_configure.connect
 # def setup_periodic_tasks(sender, **kwargs):
