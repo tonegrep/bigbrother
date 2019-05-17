@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['tohue.pythonanywhere.com', 
     '127.0.0.1',
-    '192.168.1.10'
+    '192.168.1.10',
+    '188.32.136.71',
 ]
 
 

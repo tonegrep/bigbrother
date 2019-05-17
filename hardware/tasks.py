@@ -1,7 +1,17 @@
 from .celery import app
 import json
 from devices.models import LightController
+import logging
+logger = logging.getLogger(__name__)
+# STATUS_READY = 0
+# STATUS_BUSY = 1
+# STATUS_OFFLINE = 2
 
+STATUS = {
+    0 : 'ready',
+    1 : 'busy',
+    2 : 'offline',
+}
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -17,15 +27,17 @@ def get_client_ip(request):
     return ip
 
 @app.task
-def process_light(request):
-    info = json.loads(request.body.decode('utf-8'))
+def process_light(info):
+    print(info)
     controller = LightController.objects.get(uuid=info['UUID'])
     if controller:
-        ip = get_client_ip(request)
-        if ip != controller.system.ip:
-            controller.system.ip = ip
-            controller.system.save()
+        # ip = get_client_ip(request)
+        # if ip != controller.system.ip:
+        #     controller.system.ip = ip
+        #     controller.system.save()
         controller.brightness = info['data']
-        controller.status = info['status']
+        status_code = int(info['status'])
+        controller.status = STATUS[status_code]
+        print(controller.status)
         controller.save()
     return info['status']
