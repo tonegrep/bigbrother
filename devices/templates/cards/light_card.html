@@ -21,10 +21,9 @@
             <input type="range" min="0" max="255" value="128" class="slider" id="brightness_range" name="brightness">
           </div>
           <input type="hidden" name="controller" value="{{item.id}}">
-          <input type="hidden" name="user_type" value="human">
           <button class="btn btn-primary" type="button submit" value="light_brightness">
             Применить
-          </button>          
+          </button>
         </div>
       </form>
       {% if item.type == 'RGB' %}

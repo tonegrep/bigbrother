@@ -18,15 +18,13 @@ class LightControllerBrightnessView(UpdateView):
     def post(self, request, *args, **kwargs):
         form = LightControllerBrightnessForm(request.POST)
         if form.is_valid() and request.user.is_authenticated:
+            brightness = request.POST.get('brightness')
             controller = LightController.objects.get(id=request.POST.get('controller'))
             ip = controller.system.ip
-            controller.brightness = request.POST.get('brightness')
+            controller.brightness = brightness
             controller.save()
-            controller_response = requests.post('http://' + ip + ':' + str(controller.port) + '/SET',data='brightness=' + request.POST.get('brightness'))
+            controller_response = requests.post('http://' + ip + ':' + str(controller.port) + '/SET',data='brightness=' + brightness)
             print(controller_response)
-        # elif request.POST.get('user_type') == 'controller':
-        #     controller = LightController.objects.get(uuid=request.GET.get('uuid'))
-        #     if controller:
         return redirect('/devices')
 
 class DeviceView(TemplateView):

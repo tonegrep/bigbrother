@@ -1,6 +1,6 @@
 from .celery import app
 import json
-from devices.models import LightController
+from devices.models import LightController, Sensor
 import logging
 logger = logging.getLogger(__name__)
 # STATUS_READY = 0
@@ -39,5 +39,16 @@ def process_light(info):
         status_code = int(info['status'])
         controller.status = STATUS[status_code]
         print(controller.status)
+        controller.save()
+    return info['status']
+
+@app.task
+def process_sensor(info):
+    print(info)
+    controller = Sensor.objects.get(uuid=info['UUID'])
+    if controller:
+        controller.current_data = info['data']['temperature']
+        status_code = int(info['status'])
+        controller.status = STATUS[status_code]
         controller.save()
     return info['status']

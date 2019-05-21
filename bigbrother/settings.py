@@ -129,6 +129,9 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
+# CELERY_IMPORTS = [
+#     'hardware.tasks',
+# ]
 
 USE_I18N = True
 

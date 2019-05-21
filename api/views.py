@@ -10,8 +10,11 @@ from rest_framework.permissions import AllowAny
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from .serializers import ControlledDeviceSerializer, RemoteControlCodeSerializer, SystemSerializer, RoomSerializer, LightControllerSerializer, RemoteControllerSerializer, SensorSerializer, JobSerializer, CreateUserSerializer
 from devices.models import ControlledDevice, RemoteControlCode, System, Room, LightController, RemoteController, Sensor, Job
+from devices.views import LightControllerBrightnessView
 import requests
+import socket
 
+HOST_URL = 'http://188.32.136.71:8000'
 CLIENT_ID = 'SkLYqHz439ZaHl1DntnKrzuEJHv08sAZeZyjOkVc'
 CLIENT_SECRET = '8uJg9tl9oAV22HFaQcc2649U6kk4HxoNV3BDs4V5UPQs5AoHm2NlmeRJyL43Z3s95VPE5zS6b2SVFhnQ3oYmOENFFKDovbKcPQDgcP97CDX840jiokZxkEk0UJhJMXVR'
 
@@ -21,7 +24,8 @@ def register(request):
     serializer = CreateUserSerializer(data=request.data) 
     if serializer.is_valid():
         serializer.save() 
-        r = requests.post('http://192.168.1.10:8000/api/o/token/', 
+        r = requests.post(
+            HOST_URL + '/api/o/token/', 
             data={
                 'grant_type': 'password',
                 'username': request.data['username'],
@@ -37,7 +41,7 @@ def register(request):
 @permission_classes([AllowAny])
 def token(request):
     r = requests.post(
-    'http://192.168.1.10:8000/api/o/token/', 
+        HOST_URL + '/api/o/token/', 
         data={
             'grant_type': 'password',
             'username': request.data['username'],
@@ -153,19 +157,14 @@ class LightControllerAPIListView(APIView):
 class LightControllerBrightnessAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def post(self, request, format=None):
-        try:
-            item = LightController.objects.get(pk=request.POST.get('controller'))
-            print(item, item.system, item.system.users, request.user)
-            if request.user in item.system.users.all():
-                ip = item.system.ip
-                item.brightness = request.POST.get('brightness')
-                item.save()
-                requests.post('http://' + ip + ':' + str(item.port) + '/SET',data='brightness=' + request.POST.get('brightness'))
-                serializer = LightControllerSerializer(item)
-                return Response(serializer.data)
-            return Response(status=401)
-        except LightController.DoesNotExist:
-            return Response(status=404)
+        r = requests.post(
+        HOST_URL + '/devices/light_brightness/',
+        data={
+            'controller': request.data['controller'],
+            'brightness': request.data['brightness'],
+        },
+        )
+        return Response(r.json())
 
 class RemoteControllerAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
