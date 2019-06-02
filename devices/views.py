@@ -4,6 +4,7 @@ from django.views.generic import TemplateView, UpdateView
 from devices.models import LightController, RemoteController, Sensor, System, Room
 from .forms import LightControllerBrightnessForm
 import requests
+from django.utils.decorators import method_decorator
 
 def check_controller_uuid(request):
     pass
@@ -26,6 +27,19 @@ class LightControllerBrightnessView(UpdateView):
             controller_response = requests.post('http://' + ip + ':' + str(controller.port) + '/SET',data='brightness=' + brightness)
             print(controller_response)
         return redirect('/devices')
+
+# class RemoteControllerSendSignal(UpdateView):
+#     def post(self, request, *args, **kwargs):
+#     form = LightControllerBrightnessForm(request.POST)
+#     if form.is_valid() and request.user.is_authenticated:
+#         brightness = request.POST.get('brightness')
+#         controller = LightController.objects.get(id=request.POST.get('controller'))
+#         ip = controller.system.ip
+#         controller.brightness = brightness
+#         controller.save()
+#         controller_response = requests.post('http://' + ip + ':' + str(controller.port) + '/SET',data='brightness=' + brightness)
+#         print(controller_response)
+#     return redirect('/devices')
 
 class DeviceView(TemplateView):
     template_name = 'devices.html'

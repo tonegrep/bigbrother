@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.utils.decorators import method_decorator
+from django.middleware.csrf import get_token
 from rest_framework import generics, permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -123,6 +124,15 @@ class RoomAPIView(APIView):
         except Room.DoesNotExist:
             return Response(status=404)
 
+class RoomAPISystemListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
+    def get(self, request, id, format=None):
+        items = Room.objects.filter(system__id=id)
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(items, request)
+        serializer = RoomSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
 class RoomAPIListView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, format=None):
@@ -158,13 +168,16 @@ class LightControllerBrightnessAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def post(self, request, format=None):
         r = requests.post(
-        HOST_URL + '/devices/light_brightness/',
-        data={
-            'controller': request.data['controller'],
-            'brightness': request.data['brightness'],
-        },
+            HOST_URL + '/devices/light_brightness/',
+            data={
+                'controller': request.data['controller'],
+                'brightness': request.data['brightness'],
+            },
+            headers={
+                'X-CSRFToken': get_token(request),
+            }
         )
-        return Response(r.json())
+        return Response(r.text)
 
 class RemoteControllerAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
