@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 from .views import HomeView, SignUpView, get_csrf
-from devices.views import ProfileView, SystemView
+from web.views import ProfileView, SystemView
 from django.views.decorators.csrf import csrf_exempt
 import api.urls
 from django.conf.urls import url, include
@@ -21,7 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', csrf_exempt(SignUpView.as_view()), name='signup'),
-    path('devices/', include('devices.urls')),
+    #path('devices/', include('devices.urls')),
+    path('manage/', include('web.urls')),
     path('hardware/', include('hardware.urls')),
     path('system/', SystemView.as_view(), name='system'),
     path('profile/', ProfileView.as_view(), name='profile'),

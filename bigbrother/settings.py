@@ -72,7 +72,10 @@ ROOT_URLCONF = 'bigbrother.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['bigbrother/templates'],
+        'DIRS': [
+            'bigbrother/templates',
+            'web/templates',
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -14,13 +14,17 @@ urlpatterns = [
   re_path(r'^room/by_sys/(?P<id>[0-9]+)$', RoomAPISystemListView.as_view()),
   re_path(r'^lightcontroller/(?P<id>[0-9]+)$', LightControllerAPIView.as_view()),
   re_path(r'^lightcontroller/$', LightControllerAPIListView.as_view()),
+  re_path(r'^lightcontroller/by_room/(?P<id>[0-9]+)$', LightControllerAPIRoomListView.as_view()),
   re_path(r'^remotecontroller/(?P<id>[0-9]+)$', RemoteControllerAPIView.as_view()),
   re_path(r'^remotecontroller/$', RemoteControllerAPIListView.as_view()),
+  re_path(r'^remotecontroller/by_room/(?P<id>[0-9]+)$', RemoteControllerAPIRoomListView.as_view()),
   re_path(r'^sensor/(?P<id>[0-9]+)$', SensorAPIView.as_view()),
   re_path(r'^sensor/$', SensorAPIListView.as_view()),
+  re_path(r'^sensor/by_room/(?P<id>[0-9]+)$', SensorAPIRoomListView.as_view()),
   path('register/', register),
   path('token/', token),
   
   #actions api
   path('lightcontroller/brightness/', LightControllerBrightnessAPIView.as_view()),
+  path('remotecontroller/signal/', RemoteControllerSignalAPIView.as_view()),
 ]

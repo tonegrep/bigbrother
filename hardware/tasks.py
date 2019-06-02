@@ -1,4 +1,4 @@
-from .celery import app
+from bigbrother.celery import app
 import json
 from devices.models import LightController, Sensor
 import logging
@@ -18,7 +18,7 @@ def get_client_ip(request):
     if x_forwarded_for:
         print("returning FORWARDED_FOR")
         ip = x_forwarded_for.split(',')[-1].strip()
-    elif request.META.get('HTTP_X_REAL_IP'):
+    elif -request.META.get('HTTP_X_REAL_IP'):
         print("returning REAL_IP")
         ip = request.META.get('HTTP_X_REAL_IP')
     else:

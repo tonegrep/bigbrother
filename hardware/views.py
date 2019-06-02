@@ -6,7 +6,9 @@ from django.http import HttpResponse
 
 def data_transmit(request):
     if request.method == 'POST':
+        
         body = json.loads(request.body.decode('utf-8'))
+        print(body)
         controller_type = body['type']
         if controller_type is 0:
             process_light.delay(body)

@@ -11,7 +11,7 @@ from rest_framework.permissions import AllowAny
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from .serializers import ControlledDeviceSerializer, RemoteControlCodeSerializer, SystemSerializer, RoomSerializer, LightControllerSerializer, RemoteControllerSerializer, SensorSerializer, JobSerializer, CreateUserSerializer
 from devices.models import ControlledDevice, RemoteControlCode, System, Room, LightController, RemoteController, Sensor, Job
-from devices.views import LightControllerBrightnessView
+from devices.actions import SendRemoteControllerSignal, SetLightControllerBrightness
 import requests
 import socket
 
@@ -91,6 +91,33 @@ class RemoteControlCodeAPIListView(APIView):
         serializer = RemoteControlCodeSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
 
+class LightControllerAPIRoomListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
+    def get(self, request, id, format=None):
+        items = Room.objects.get(pk=id).lightcontroller_set.all()
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(items, request)
+        serializer = RoomSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+class RemoteControllerAPIRoomListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
+    def get(self, request, id, format=None):
+        items = Room.objects.get(pk=id).remotecontroller_set.all()
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(items, request)
+        serializer = RoomSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+class SensorAPIRoomListView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
+    def get(self, request, id, format=None):
+        items = Room.objects.get(pk=id).sensor_set.all()
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(items, request)
+        serializer = RoomSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
 class SystemAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def get(self, request, id, format=None):
@@ -167,17 +194,11 @@ class LightControllerAPIListView(APIView):
 class LightControllerBrightnessAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
     def post(self, request, format=None):
-        r = requests.post(
-            HOST_URL + '/devices/light_brightness/',
-            data={
-                'controller': request.data['controller'],
-                'brightness': request.data['brightness'],
-            },
-            headers={
-                'X-CSRFToken': get_token(request),
-            }
-        )
-        return Response(r.text)
+        try:
+            r = SetLightControllerBrightness(request.POST.dict())
+        except Exception as e:
+            print('snafu')
+        return Response(str(r))
 
 class RemoteControllerAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
@@ -199,6 +220,15 @@ class RemoteControllerAPIListView(APIView):
         result_page = paginator.paginate_queryset(items, request)
         serializer = RemoteControllerSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+class RemoteControllerSignalAPIView(APIView):
+    @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))
+    def post(self, request, format=None):
+        try:
+            r = SendRemoteControllerSignal(request.POST.dict())
+        except Exception as e:
+            print('snafu')
+        return Response(str(r))
 
 class SensorAPIView(APIView):
     @method_decorator(authentication_classes((TokenAuthentication,SessionAuthentication, OAuth2Authentication,)))

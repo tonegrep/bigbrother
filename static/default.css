@@ -94,3 +94,19 @@ label[for=b], output[for=b]{
   font-size: 3em;
   background: rgba(255,255,255,.3);
 }
+
+.blog-header {
+   background-color: #D7F0EE !important; 
+  background-image: url("hoffman.png"); 
+  background-repeat:repeat;
+}
+/* 
+.navbar {
+  background-image: url("dark-mosaic.png"); 
+  background-repeat:repeat;
+} */
+
+.content {
+  background-image: url("dimension.png") !important; 
+  background-repeat:repeat;
+}
