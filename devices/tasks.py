@@ -1,12 +1,15 @@
-from bigbrother.celery import app
+# from bigbrother.celery import app
+# from django_celery_beat.models import PeriodicTask, IntervalSchedule, PeriodicTasks
 
-@app.task
-def set_light_brightness():
-    pass
-
-@app.task
-def send_rc_signal():
-    pass
+# this is placeholder for tasks file
+# there should be some classes/functions implementing the time schedule for jobs
 
 
-#body = json.loads(request.body.decode('utf-8'))
+
+# @app.task
+# def set_light_brightness():
+#     pass
+
+# @app.task
+# def send_rc_signal():
+#     pass

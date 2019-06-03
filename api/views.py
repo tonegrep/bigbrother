@@ -9,7 +9,7 @@ from rest_framework.decorators import authentication_classes, api_view, permissi
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import AllowAny
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
-from .serializers import ControlledDeviceSerializer, RemoteControlCodeSerializer, SystemSerializer, RoomSerializer, LightControllerSerializer, RemoteControllerSerializer, SensorSerializer, JobSerializer, CreateUserSerializer
+from .serializers import ControlledDeviceSerializer, RemoteControlCodeSerializer, SystemSerializer, RoomSerializer, LightControllerSerializer, RemoteControllerSerializer, SensorSerializer, CreateUserSerializer, JobSerializer
 from devices.models import ControlledDevice, RemoteControlCode, System, Room, LightController, RemoteController, Sensor, Job
 from devices.actions import SendRemoteControllerSignal, SetLightControllerBrightness
 import requests

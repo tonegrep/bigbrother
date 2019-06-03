@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     #3d party
     'django_extensions',
     'django_celery_results',
+    'django_celery_beat',
     'drf_generators',
     'oauth2_provider',
 
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'devices',
     'api',
     'hardware',
+    'web',
 ]
 
 MIDDLEWARE = [

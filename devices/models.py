@@ -3,6 +3,16 @@ from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
 from model_utils.choices import Choices 
 from model_utils.fields import StatusField
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
+
+class Job(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=0)
+    controller_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING, default='LightController')
+    controller_id = models.PositiveIntegerField(default=0)
+    controller = GenericForeignKey('controller_type', 'controller_id')
+    datetime = models.DateTimeField(auto_now=True)
+    data = models.CharField(max_length=100, default='255')
 
 class ControlledDevice(models.Model):
     name = models.CharField(max_length=30)
@@ -47,9 +57,11 @@ class LightController(Controller):
         default=TYPE_CHOICE.Singlecolor,
     )
     brightness = models.PositiveIntegerField()
+    jobs = GenericRelation(Job, related_query_name='lightcontroller')
 
 class RemoteController(Controller):
     controlled_device = models.ManyToManyField(ControlledDevice)    
+    jobs = GenericRelation(Job, related_query_name='remotecontroller')
 
 class Sensor(Controller):
     current_data = models.IntegerField(default=0)
@@ -59,14 +71,16 @@ class Sensor(Controller):
         choices=MEASURE_CHOICE,
         default=MEASURE_CHOICE.C,
     )
+    jobs = GenericRelation(Job, related_query_name='sensor')
 
-class Job(models.Model):
-    command = models.CharField(max_length=200)
-    req_date_time = models.DateTimeField(auto_now_add=True)
-    RECCURENCE_CHOICE = Choices('Everyday', 'Once')
-    reccurence_type = models.CharField(
-        max_length=9,
-        choices=RECCURENCE_CHOICE,
-        default=RECCURENCE_CHOICE.Once,
-    )
-    reccurence_time = models.TimeField()
+
+
+    # command = models.CharField(max_length=200)
+    # req_date_time = models.DateTimeField(auto_now_add=True)
+    # RECCURENCE_CHOICE = Choices('Everyday', 'Once')
+    # reccurence_type = models.CharField(
+    #     max_length=9,
+    #     choices=RECCURENCE_CHOICE,
+    #     default=RECCURENCE_CHOICE.Once,
+    # )
+    # reccurence_time = models.TimeField()

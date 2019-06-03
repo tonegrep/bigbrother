@@ -3,17 +3,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import TemplateView, UpdateView
-from devices.models import LightController, RemoteController, Sensor, System, Room
+from devices.models import LightController, RemoteController, Sensor, System, Room, Job
 from .forms import LightControllerBrightnessForm, RCSignalForm
 import requests
 import json
 from django.utils.decorators import method_decorator
 from devices.actions import SetLightControllerBrightness, SendRemoteControllerSignal
+from devices.decorators import create_post_request_entry
 from django.contrib import messages
 from requests.exceptions import ConnectTimeout
 # from abc import ABC, abstractmethod
 
 class WebBrightnessView(UpdateView):
+    @method_decorator(create_post_request_entry(LightController, 'brightness'))
     def post(self, request, *args, **kwargs):
         form = LightControllerBrightnessForm(request.POST)
         if form.is_valid() and request.user.is_authenticated:
@@ -51,12 +53,23 @@ class ProfileView(TemplateView):
     def get(self, request, *args, **kwargs):
         return render(request, 'profile.html')
 
-class SystemView(TemplateView):
-    template_name = 'system.html'
+class DeviceViewRooms(TemplateView):
+    template_name = 'rooms.html'
     def get(self, request, *args, **kwargs):
         rooms = Room.objects.filter(system__users=request.user)
         context = {
             'rooms' : rooms,
+        }
+        return render(request, 'rooms.html', context)
+
+class SystemView(TemplateView):
+    template_name='system.html'
+    def get(self, request,*args, **kwargs):
+        system_jobs = Job.objects.filter(user = request.user)
+        # systems = System.objects.filter(users=request.user)
+        # system_jobs = Job.objects.filter(controller__system=systems)
+        context = {
+            'jobs' : system_jobs,
         }
         return render(request, 'system.html', context)
 

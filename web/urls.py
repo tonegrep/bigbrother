@@ -1,4 +1,4 @@
-from .views import DeviceView, SystemView, ProfileView, WebBrightnessView
+from .views import DeviceView, DeviceViewRooms, SystemView, ProfileView, WebBrightnessView
 from django.urls import include, path
 
 urlpatterns = [

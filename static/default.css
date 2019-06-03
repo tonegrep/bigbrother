@@ -100,11 +100,6 @@ label[for=b], output[for=b]{
   background-image: url("hoffman.png"); 
   background-repeat:repeat;
 }
-/* 
-.navbar {
-  background-image: url("dark-mosaic.png"); 
-  background-repeat:repeat;
-} */
 
 .content {
   background-image: url("dimension.png") !important; 
